@@ -1,4 +1,7 @@
 package com.ana.pesquisa_online.entity.enums;
 
-public class TipoPergunta {
+public enum TipoPergunta {
+    Aberta,
+    Unica_Escolha,
+    Multipla_Escolha
 }

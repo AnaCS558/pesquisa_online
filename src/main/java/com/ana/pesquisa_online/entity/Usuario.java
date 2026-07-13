@@ -1,65 +1,91 @@
 package com.ana.pesquisa_online.entity;
 
+import com.ana.pesquisa_online.entity.enums.PerfilUsuario;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
     @Entity
-    @Table(name = "Participante")
-    public class Participante {
+    @Table(name = "usuario")
+    public class Usuario {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_participante")
-    private Long id;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "id_usuario")
+        private Long id;
 
-    @Column(length = 120)
-    private String nome;
+        @Column(nullable = false, length = 120)
+        private String nome;
 
-    @Column(length = 150)
-    private String email;
+        @Column(nullable = false, unique = true, length = 150)
+        private String email;
 
-    @OneToMany(mappedBy = "participante", cascade = CascadeType.ALL)
-    private List<Resposta> respostas = new ArrayList<>();
+        @Column(nullable = false)
+        private String senha;
 
-    public Participante() {
+        @Enumerated(EnumType.STRING)
+        @Column(nullable = false)
+        private PerfilUsuario perfil;
+
+        @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+        private List<Resposta> respostas = new ArrayList<>();
+
+        public Usuario() {
+        }
+
+        public Usuario(Long id, String nome, String email, String senha, PerfilUsuario perfil) {
+            this.id = id;
+            this.nome = nome;
+            this.email = email;
+            this.senha = senha;
+            this.perfil = perfil;
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public String getNome() {
+            return nome;
+        }
+
+        public void setNome(String nome) {
+            this.nome = nome;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getSenha() {
+            return senha;
+        }
+
+        public void setSenha(String senha) {
+            this.senha = senha;
+        }
+
+        public PerfilUsuario getPerfil() {
+            return perfil;
+        }
+
+        public void setPerfil(PerfilUsuario perfil) {
+            this.perfil = perfil;
+        }
+
+        public List<Resposta> getRespostas() {
+            return respostas;
+        }
+
+        public void setRespostas(List<Resposta> respostas) {
+            this.respostas = respostas;
+        }
     }
-
-    public Participante(Long id, String nome, String email) {
-        this.id = id;
-        this.nome = nome;
-        this.email = email;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public List<Resposta> getRespostas() {
-        return respostas;
-    }
-
-    public void setRespostas(List<Resposta> respostas) {
-        this.respostas = respostas;
-    }
-}
