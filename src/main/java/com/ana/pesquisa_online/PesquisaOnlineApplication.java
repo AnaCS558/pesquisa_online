@@ -9,7 +9,6 @@ public class PesquisaOnlineApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PesquisaOnlineApplication.class, args);
 	} {
-        System.out.println("Projeto");
     }
 
 
