@@ -5,6 +5,7 @@ import com.ana.pesquisa_online.repository.PesquisaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 import java.util.Optional;
 
 @Service
@@ -15,6 +16,7 @@ public class PesquisaService {
     public PesquisaService(PesquisaRepository pesquisaRepository) {
         this.pesquisaRepository = pesquisaRepository;
     }
+
     public List<Pesquisa> listarTodas() {
         return pesquisaRepository.findAll();
     }
@@ -48,6 +50,4 @@ public class PesquisaService {
 
         pesquisaRepository.deleteById(id);
     }
-
-
 }
