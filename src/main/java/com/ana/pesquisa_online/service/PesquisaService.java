@@ -6,8 +6,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import java.util.Optional;
-
 @Service
 public class PesquisaService {
 
@@ -21,8 +19,9 @@ public class PesquisaService {
         return pesquisaRepository.findAll();
     }
 
-    public Optional<Pesquisa> buscarPorId(Long id) {
-        return pesquisaRepository.findById(id);
+    public Pesquisa buscarPorId(Long id) {
+        return pesquisaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pesquisa não encontrada."));
     }
 
     public Pesquisa salvar(Pesquisa pesquisa) {
@@ -31,13 +30,12 @@ public class PesquisaService {
 
     public Pesquisa atualizar(Long id, Pesquisa pesquisaAtualizada) {
 
-        Pesquisa pesquisa = pesquisaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pesquisa não encontrada."));
+        Pesquisa pesquisa = buscarPorId(id);
 
         pesquisa.setTitulo(pesquisaAtualizada.getTitulo());
         pesquisa.setDescricao(pesquisaAtualizada.getDescricao());
         pesquisa.setAtiva(pesquisaAtualizada.getAtiva());
-        pesquisa.setDataEncerramneto(pesquisaAtualizada.getDataEncerramneto());
+        pesquisa.setDataEncerramento(pesquisaAtualizada.getDataEncerramento());
 
         return pesquisaRepository.save(pesquisa);
     }

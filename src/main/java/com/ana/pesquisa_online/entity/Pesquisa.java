@@ -88,12 +88,12 @@ import java.util.List;
             this.dataCriacao = dataCriacao;
         }
 
-        public LocalDateTime getDataEncerramneto() {
+        public LocalDateTime getDataEncerramento() {
             return dataEncerramento;
         }
 
-        public void setDataEncerramneto(LocalDateTime dataEncerramneto) {
-            this.dataEncerramento = dataEncerramneto;
+        public void setDataEncerramento(LocalDateTime dataEncerramento) {
+            this.dataEncerramento = dataEncerramento;
         }
 
         public List<Pergunta> getPerguntas() {
