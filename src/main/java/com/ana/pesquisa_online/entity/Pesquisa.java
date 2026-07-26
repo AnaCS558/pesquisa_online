@@ -1,5 +1,6 @@
 package com.ana.pesquisa_online.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.List;
         private LocalDateTime dataEncerramento;
 
         @OneToMany(mappedBy = "pesquisa", cascade = CascadeType.ALL, orphanRemoval = true)
+        @JsonManagedReference("pesquisa-pergunta")
         private List<Pergunta> perguntas = new ArrayList<>();
 
         public Pesquisa() {

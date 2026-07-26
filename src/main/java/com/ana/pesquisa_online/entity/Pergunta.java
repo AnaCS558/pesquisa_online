@@ -1,5 +1,6 @@
 package com.ana.pesquisa_online.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ import com.ana.pesquisa_online.entity.enums.TipoPergunta;
 
         @ManyToOne
         @JoinColumn(name = "id_pesquisa", nullable = false)
+        @JsonBackReference("pesquisa-pergunta")
         private Pesquisa pesquisa;
 
         @OneToMany(mappedBy = "pergunta",

@@ -28,6 +28,19 @@ public class RespostaService {
         return respostaRepository.save(resposta);
     }
 
+    public Resposta atualizar(Long id, Resposta respostaAtualizada) {
+
+        Resposta resposta = respostaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Resposta não encontrada."));
+
+        resposta.setUsuario(respostaAtualizada.getUsuario());
+        resposta.setPergunta(respostaAtualizada.getPergunta());
+        resposta.setOpcao(respostaAtualizada.getOpcao());
+        resposta.setRespostaTexto(respostaAtualizada.getRespostaTexto());
+
+        return respostaRepository.save(resposta);
+    }
+
     public void excluir(Long id) {
 
         Resposta resposta = buscarPorId(id);

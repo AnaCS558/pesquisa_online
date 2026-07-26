@@ -31,6 +31,12 @@ public class RespostaController {
         return respostaService.salvar(resposta);
     }
 
+    @PutMapping("/{id}")
+    public Resposta atualizar(@PathVariable Long id,
+                              @RequestBody Resposta resposta) {
+        return respostaService.atualizar(id, resposta);
+    }
+
     @DeleteMapping("/{id}")
     public void excluir(@PathVariable Long id) {
         respostaService.excluir(id);

@@ -1,5 +1,6 @@
 package com.ana.pesquisa_online.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
     @Entity
@@ -16,6 +17,7 @@ import jakarta.persistence.*;
 
     @ManyToOne
     @JoinColumn(name = "id_pergunta", nullable = false)
+    @JsonBackReference("pergunta-opcao")
     private Pergunta pergunta;
 
     public Opcao() {
