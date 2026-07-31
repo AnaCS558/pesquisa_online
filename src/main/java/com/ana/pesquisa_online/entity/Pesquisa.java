@@ -1,6 +1,7 @@
 package com.ana.pesquisa_online.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.validation.constraints.*;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,12 +16,16 @@ import java.util.List;
         @Column(name = "id_pesquisa")
         private Long id;
 
+        @NotBlank(message = "O título é obrigatório.")
+        @Size(max = 150, message = "O título deve ter no máximo 150 caracteres.")
         @Column(nullable = false, length = 150)
         private String titulo;
 
+        @Size(max = 500, message = "A descrição deve ter no máximo 500 caracteres.")
         @Column(length = 500)
         private String descricao;
 
+        @NotNull(message = "Informe se a pesquisa está ativa.")
         @Column(nullable = false)
         private Boolean ativa = true;
 

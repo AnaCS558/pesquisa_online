@@ -2,6 +2,7 @@ package com.ana.pesquisa_online.controller;
 
 import com.ana.pesquisa_online.entity.Resposta;
 import com.ana.pesquisa_online.service.RespostaService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,13 +28,13 @@ public class RespostaController {
     }
 
     @PostMapping
-    public Resposta salvar(@RequestBody Resposta resposta) {
+    public Resposta salvar(@Valid @RequestBody Resposta resposta) {
         return respostaService.salvar(resposta);
     }
 
     @PutMapping("/{id}")
     public Resposta atualizar(@PathVariable Long id,
-                              @RequestBody Resposta resposta) {
+                              @Valid @RequestBody Resposta resposta) {
         return respostaService.atualizar(id, resposta);
     }
 

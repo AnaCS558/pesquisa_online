@@ -2,6 +2,7 @@ package com.ana.pesquisa_online.controller;
 
 import com.ana.pesquisa_online.entity.Opcao;
 import com.ana.pesquisa_online.service.OpcaoService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,13 +28,13 @@ public class OpcaoController {
     }
 
     @PostMapping
-    public Opcao salvar(@RequestBody Opcao opcao) {
+    public Opcao salvar(@Valid @RequestBody Opcao opcao) {
         return opcaoService.salvar(opcao);
     }
 
     @PutMapping("/{id}")
     public Opcao atualizar(@PathVariable Long id,
-                           @RequestBody Opcao opcao) {
+                           @Valid @RequestBody Opcao opcao) {
 
         return opcaoService.atualizar(id, opcao);
     }

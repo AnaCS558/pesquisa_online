@@ -2,6 +2,7 @@ package com.ana.pesquisa_online.controller;
 
 import com.ana.pesquisa_online.entity.Pergunta;
 import com.ana.pesquisa_online.service.PerguntaService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,13 +28,13 @@ public class PerguntaController {
     }
 
     @PostMapping
-    public Pergunta salvar(@RequestBody Pergunta pergunta) {
+    public Pergunta salvar(@Valid @RequestBody Pergunta pergunta) {
         return perguntaService.salvar(pergunta);
     }
 
     @PutMapping("/{id}")
     public Pergunta atualizar(@PathVariable Long id,
-                              @RequestBody Pergunta pergunta) {
+                              @Valid @RequestBody Pergunta pergunta) {
         return perguntaService.atualizar(id, pergunta);
     }
 

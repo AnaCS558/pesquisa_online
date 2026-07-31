@@ -1,6 +1,7 @@
 package com.ana.pesquisa_online.service;
 
 import com.ana.pesquisa_online.entity.Pesquisa;
+import com.ana.pesquisa_online.exception.ResourceNotFoundException;
 import com.ana.pesquisa_online.repository.PesquisaRepository;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,8 @@ public class PesquisaService {
 
     public Pesquisa buscarPorId(Long id) {
         return pesquisaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pesquisa não encontrada."));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Pesquisa não encontrada."));
     }
 
     public Pesquisa salvar(Pesquisa pesquisa) {
@@ -43,7 +45,7 @@ public class PesquisaService {
     public void excluir(Long id) {
 
         if (!pesquisaRepository.existsById(id)) {
-            throw new RuntimeException("Pesquisa não encontrada.");
+            throw new ResourceNotFoundException("Pesquisa não encontrada.");
         }
 
         pesquisaRepository.deleteById(id);

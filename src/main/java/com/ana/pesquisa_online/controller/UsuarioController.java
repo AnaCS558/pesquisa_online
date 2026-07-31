@@ -3,6 +3,7 @@ package com.ana.pesquisa_online.controller;
 
 import com.ana.pesquisa_online.entity.Usuario;
 import com.ana.pesquisa_online.service.UsuarioService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,13 +29,13 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public  Usuario salvar(@RequestBody Usuario usuario) {
+    public  Usuario salvar(@Valid @RequestBody Usuario usuario) {
         return usuarioService.salvar(usuario);
     }
 
     @PutMapping("/{id}")
     public  Usuario atualizar(@PathVariable Long id,
-                              @RequestBody Usuario usuario) {
+                              @Valid @RequestBody Usuario usuario) {
         return usuarioService.atualizar(id, usuario);
     }
 

@@ -1,6 +1,7 @@
 package com.ana.pesquisa_online.entity;
 
 import com.ana.pesquisa_online.entity.enums.PerfilUsuario;
+import jakarta.validation.constraints.*;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,15 +15,22 @@ import java.util.List;
         @Column(name = "id_usuario")
         private Long id;
 
+        @NotBlank(message = "O nome é obrigatório.")
+        @Size(max = 100, message = "O nome deve possuir no máximo 100 caracteres.")
         @Column(nullable = false, length = 120)
         private String nome;
 
+        @NotBlank(message = "O e-mail é obrigatório.")
+        @Email(message = "Informe um e-mail válido.")
         @Column(nullable = false, unique = true, length = 150)
         private String email;
 
+        @NotBlank(message = "A senha é obrigatória.")
+        @Size(min = 6, message = "A senha deve possuir pelo menos 6 caracteres.")
         @Column(nullable = false)
         private String senha;
 
+        @NotNull(message = "Informe o perfil do usuário.")
         @Enumerated(EnumType.STRING)
         @Column(nullable = false)
         private PerfilUsuario perfil;

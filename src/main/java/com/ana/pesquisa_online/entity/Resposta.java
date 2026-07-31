@@ -1,6 +1,7 @@
 package com.ana.pesquisa_online.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -12,10 +13,12 @@ public class Resposta {
     @Column(name = "id_resposta")
     private Long id;
 
+    @NotNull(message = "Informe o usuário.")
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
+    @NotNull(message = "Informe a pergunta.")
     @ManyToOne
     @JoinColumn(name = "id_pergunta", nullable = false)
     private Pergunta pergunta;
@@ -24,6 +27,7 @@ public class Resposta {
     @JoinColumn(name = "id_opcao")
     private Opcao opcao;
 
+    @Size(max = 1000, message = "A resposta deve possuir no máximo 1000 caracteres.")
     @Column(columnDefinition = "TEXT")
     private String respostaTexto;
 

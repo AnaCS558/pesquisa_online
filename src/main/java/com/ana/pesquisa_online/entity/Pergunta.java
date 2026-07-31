@@ -1,6 +1,7 @@
 package com.ana.pesquisa_online.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.validation.constraints.*;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,19 +16,26 @@ import com.ana.pesquisa_online.entity.enums.TipoPergunta;
         @Column(name = "id_pergunta")
         private Long id;
 
+        @NotBlank(message = "O enunciado é obrigatório.")
+        @Size(max = 500, message = "O enunciado deve ter no máximo 500 caracteres.")
         @Column(nullable = false, length = 500)
         private String enunciado;
 
+        @NotNull(message = "Informe o tipo da pergunta.")
         @Enumerated(EnumType.STRING)
         @Column(nullable = false)
         private TipoPergunta tipoPergunta;
 
+        @NotNull(message = "Informe se a pergunta é obrigatória.")
         @Column(nullable = false)
         private Boolean obrigatoria = true;
 
+        @NotNull(message = "Informe a ordem da pergunta.")
+        @Min(value = 1, message = "A ordem deve ser maior que zero.")
         @Column(nullable = false)
         private Integer ordem;
 
+        @NotNull(message = "A pergunta deve pertencer a uma pesquisa.")
         @ManyToOne
         @JoinColumn(name = "id_pesquisa", nullable = false)
         @JsonBackReference("pesquisa-pergunta")
