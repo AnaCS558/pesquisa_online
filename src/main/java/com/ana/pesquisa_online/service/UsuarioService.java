@@ -1,6 +1,7 @@
 package com.ana.pesquisa_online.service;
 
 import com.ana.pesquisa_online.entity.Usuario;
+import com.ana.pesquisa_online.exception.ResourceNotFoundException;
 import com.ana.pesquisa_online.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +22,12 @@ public class UsuarioService {
 
     public Usuario buscarPorId(Long id) {
         return usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
     }
 
     public Usuario buscarPorEmail(String email) {
         return usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
     }
 
     public Usuario salvar(Usuario usuario) {

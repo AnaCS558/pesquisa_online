@@ -3,6 +3,7 @@ package com.ana.pesquisa_online.service;
 import com.ana.pesquisa_online.entity.Opcao;
 import com.ana.pesquisa_online.repository.OpcaoRepository;
 import org.springframework.stereotype.Service;
+import com.ana.pesquisa_online.exception.ResourceNotFoundException;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class OpcaoService {
 
     public Opcao buscarPorId(Long id) {
         return opcaoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Opção não encontrada."));
+                .orElseThrow(() -> new ResourceNotFoundException("Opção não encontrada."));
     }
 
     public Opcao salvar(Opcao opcao) {

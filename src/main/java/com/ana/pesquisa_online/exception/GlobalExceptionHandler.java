@@ -44,4 +44,27 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(resposta, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> tratarErroGenerico(Exception ex) {
+
+        ErrorResponse erro = new ErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Ocorreu um erro interno no servidor."
+        );
+
+        return new ResponseEntity<>(erro, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(BusinessRuleException.class)
+    public ResponseEntity<ErrorResponse> tratarRegraDeNegocio(
+            BusinessRuleException ex) {
+
+        ErrorResponse erro = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage()
+        );
+
+        return new ResponseEntity<>(erro, HttpStatus.BAD_REQUEST);
+    }
 }
