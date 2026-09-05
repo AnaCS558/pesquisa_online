@@ -1,5 +1,7 @@
 package com.ana.pesquisa_online.service;
 
+import com.ana.pesquisa_online.dto.UsuarioRequestDTO;
+import com.ana.pesquisa_online.dto.UsuarioResponseDTO;
 import com.ana.pesquisa_online.entity.Usuario;
 import com.ana.pesquisa_online.exception.ResourceNotFoundException;
 import com.ana.pesquisa_online.repository.UsuarioRepository;
@@ -16,38 +18,71 @@ public class UsuarioService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public List<Usuario> listarTodos() {
-        return usuarioRepository.findAll();
+    private UsuarioResponseDTO converterParaDTO(Usuario usuario) {
+        UsuarioResponseDTO dto = new UsuarioResponseDTO();
+
+        dto.setId(usuario.getId());
+        dto.setNome(usuario.getNome());
+        dto.setEmail(usuario.getEmail());
+        dto.setPerfil(usuario.getPerfil());
+
+        return dto;
     }
 
-    public Usuario buscarPorId(Long id) {
-        return usuarioRepository.findById(id)
+    public List<UsuarioResponseDTO> listarTodos() {
+        return usuarioRepository.findAll()
+                .stream()
+                .map(this::converterParaDTO)
+                .toList();
+    }
+
+    public UsuarioResponseDTO buscarPorId(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+
+        return converterParaDTO(usuario);
     }
 
-    public Usuario buscarPorEmail(String email) {
-        return usuarioRepository.findByEmail(email)
+    public UsuarioResponseDTO buscarPorEmail(String email) {
+        Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+
+        return converterParaDTO(usuario);
     }
 
-    public Usuario salvar(Usuario usuario) {
-        return usuarioRepository.save(usuario);
+    public UsuarioResponseDTO salvar(UsuarioRequestDTO dto) {
+
+        Usuario usuario = new Usuario();
+
+        usuario.setNome(dto.getNome());
+        usuario.setEmail(dto.getEmail());
+        usuario.setSenha(dto.getSenha());
+        usuario.setPerfil(dto.getPerfil());
+
+        Usuario usuarioSalvo = usuarioRepository.save(usuario);
+
+        return converterParaDTO(usuarioSalvo);
     }
 
-    public Usuario atualizar(Long id, Usuario usuarioAtualizado) {
+    public UsuarioResponseDTO atualizar(Long id, UsuarioRequestDTO dto) {
 
-        Usuario usuario = buscarPorId(id);
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 
-        usuario.setNome(usuarioAtualizado.getNome());
-        usuario.setEmail(usuarioAtualizado.getEmail());
-        usuario.setSenha(usuarioAtualizado.getSenha());
-        usuario.setPerfil(usuarioAtualizado.getPerfil());
+        usuario.setNome(dto.getNome());
+        usuario.setEmail(dto.getEmail());
+        usuario.setSenha(dto.getSenha());
+        usuario.setPerfil(dto.getPerfil());
 
-        return usuarioRepository.save(usuario);
+        Usuario usuarioAtualizado = usuarioRepository.save(usuario);
+
+        return converterParaDTO(usuarioAtualizado);
     }
+
     public void excluir(Long id) {
 
-        Usuario usuario = buscarPorId(id);
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 
         usuarioRepository.delete(usuario);
     }

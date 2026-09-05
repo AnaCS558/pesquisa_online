@@ -1,9 +1,11 @@
 package com.ana.pesquisa_online.controller;
 
-
-import com.ana.pesquisa_online.entity.Usuario;
+import com.ana.pesquisa_online.dto.UsuarioRequestDTO;
+import com.ana.pesquisa_online.dto.UsuarioResponseDTO;
 import com.ana.pesquisa_online.service.UsuarioService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,29 +21,42 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public List<Usuario> listarTodos() {
-        return usuarioService.listarTodos();
+    public ResponseEntity<List<UsuarioResponseDTO>> listarTodos() {
+        return ResponseEntity.ok(usuarioService.listarTodos());
     }
 
     @GetMapping("/{id}")
-    public Usuario buscarPorId(@PathVariable Long id) {
-        return usuarioService.buscarPorId(id);
+    public ResponseEntity<UsuarioResponseDTO> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(usuarioService.buscarPorId(id));
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UsuarioResponseDTO> buscarPorEmail(@PathVariable String email) {
+        return ResponseEntity.ok(usuarioService.buscarPorEmail(email));
     }
 
     @PostMapping
-    public  Usuario salvar(@Valid @RequestBody Usuario usuario) {
-        return usuarioService.salvar(usuario);
+    public ResponseEntity<UsuarioResponseDTO> salvar(
+            @Valid @RequestBody UsuarioRequestDTO dto) {
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(usuarioService.salvar(dto));
     }
 
     @PutMapping("/{id}")
-    public  Usuario atualizar(@PathVariable Long id,
-                              @Valid @RequestBody Usuario usuario) {
-        return usuarioService.atualizar(id, usuario);
+    public ResponseEntity<UsuarioResponseDTO> atualizar(
+            @PathVariable Long id,
+            @Valid @RequestBody UsuarioRequestDTO dto) {
+
+        return ResponseEntity.ok(usuarioService.atualizar(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public void excluir(@PathVariable Long id) {
-        usuarioService.excluir(id);
-    }
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
 
+        usuarioService.excluir(id);
+
+        return ResponseEntity.noContent().build();
+    }
 }

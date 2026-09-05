@@ -1,6 +1,7 @@
 package com.ana.pesquisa_online.controller;
 
-import com.ana.pesquisa_online.entity.Pergunta;
+import com.ana.pesquisa_online.dto.PerguntaRequestDTO;
+import com.ana.pesquisa_online.dto.PerguntaResponseDTO;
 import com.ana.pesquisa_online.service.PerguntaService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -18,24 +19,23 @@ public class PerguntaController {
     }
 
     @GetMapping
-    public List<Pergunta> listarTodas() {
+    public List<PerguntaResponseDTO> listarTodas() {
         return perguntaService.listarTodas();
     }
 
-    @GetMapping("/{id}")
-    public Pergunta buscarPorId(@PathVariable Long id) {
-        return perguntaService.buscarPorId(id);
-    }
-
     @PostMapping
-    public Pergunta salvar(@Valid @RequestBody Pergunta pergunta) {
-        return perguntaService.salvar(pergunta);
+    public PerguntaResponseDTO salvar(
+            @Valid @RequestBody PerguntaRequestDTO dto) {
+
+        return perguntaService.salvar(dto);
     }
 
     @PutMapping("/{id}")
-    public Pergunta atualizar(@PathVariable Long id,
-                              @Valid @RequestBody Pergunta pergunta) {
-        return perguntaService.atualizar(id, pergunta);
+    public PerguntaResponseDTO atualizar(
+            @PathVariable Long id,
+            @Valid @RequestBody PerguntaRequestDTO dto) {
+
+        return perguntaService.atualizar(id, dto);
     }
 
     @DeleteMapping("/{id}")
@@ -43,4 +43,3 @@ public class PerguntaController {
         perguntaService.excluir(id);
     }
 }
-

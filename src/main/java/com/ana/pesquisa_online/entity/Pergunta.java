@@ -1,6 +1,8 @@
 package com.ana.pesquisa_online.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.validation.constraints.*;
 import jakarta.persistence.*;
 import java.util.ArrayList;
@@ -49,6 +51,7 @@ import com.ana.pesquisa_online.entity.enums.TipoPergunta;
         @OneToMany(mappedBy = "pergunta",
                 cascade = CascadeType.ALL,
                 orphanRemoval = true)
+        @JsonIgnore
         private List<Resposta> respostas = new ArrayList<>();
 
         public Pergunta() {

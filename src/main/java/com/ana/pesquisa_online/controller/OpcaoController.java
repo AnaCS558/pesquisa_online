@@ -1,6 +1,7 @@
 package com.ana.pesquisa_online.controller;
 
-import com.ana.pesquisa_online.entity.Opcao;
+import com.ana.pesquisa_online.dto.OpcaoRequestDTO;
+import com.ana.pesquisa_online.dto.OpcaoResponseDTO;
 import com.ana.pesquisa_online.service.OpcaoService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -18,25 +19,28 @@ public class OpcaoController {
     }
 
     @GetMapping
-    public List<Opcao> listarTodas() {
+    public List<OpcaoResponseDTO> listarTodas() {
         return opcaoService.listarTodas();
     }
 
     @GetMapping("/{id}")
-    public Opcao buscarPorId(@PathVariable Long id) {
+    public OpcaoResponseDTO buscarPorId(@PathVariable Long id) {
         return opcaoService.buscarPorId(id);
     }
 
     @PostMapping
-    public Opcao salvar(@Valid @RequestBody Opcao opcao) {
-        return opcaoService.salvar(opcao);
+    public OpcaoResponseDTO salvar(
+            @Valid @RequestBody OpcaoRequestDTO dto) {
+
+        return opcaoService.salvar(dto);
     }
 
     @PutMapping("/{id}")
-    public Opcao atualizar(@PathVariable Long id,
-                           @Valid @RequestBody Opcao opcao) {
+    public OpcaoResponseDTO atualizar(
+            @PathVariable Long id,
+            @Valid @RequestBody OpcaoRequestDTO dto) {
 
-        return opcaoService.atualizar(id, opcao);
+        return opcaoService.atualizar(id, dto);
     }
 
     @DeleteMapping("/{id}")

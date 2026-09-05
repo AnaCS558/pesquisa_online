@@ -1,6 +1,7 @@
 package com.ana.pesquisa_online.entity;
 
 import com.ana.pesquisa_online.entity.enums.PerfilUsuario;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.*;
 import jakarta.persistence.*;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import java.util.List;
         private PerfilUsuario perfil;
 
         @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+        @JsonIgnore
         private List<Resposta> respostas = new ArrayList<>();
 
         public Usuario() {

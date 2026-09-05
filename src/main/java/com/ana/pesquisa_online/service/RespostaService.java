@@ -1,10 +1,19 @@
 package com.ana.pesquisa_online.service;
 
+import com.ana.pesquisa_online.dto.RespostaRequestDTO;
+import com.ana.pesquisa_online.dto.RespostaResponseDTO;
+
 import com.ana.pesquisa_online.entity.Resposta;
 import com.ana.pesquisa_online.entity.enums.TipoPergunta;
+
 import com.ana.pesquisa_online.exception.BusinessRuleException;
 import com.ana.pesquisa_online.exception.ResourceNotFoundException;
+
+import com.ana.pesquisa_online.repository.OpcaoRepository;
+import com.ana.pesquisa_online.repository.PerguntaRepository;
 import com.ana.pesquisa_online.repository.RespostaRepository;
+import com.ana.pesquisa_online.repository.UsuarioRepository;
+
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,26 +23,77 @@ import java.util.List;
 public class RespostaService {
 
     private final RespostaRepository respostaRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final PerguntaRepository perguntaRepository;
+    private final OpcaoRepository opcaoRepository;
 
-    public RespostaService(RespostaRepository respostaRepository) {
+    public RespostaService(
+            RespostaRepository respostaRepository,
+            UsuarioRepository usuarioRepository,
+            PerguntaRepository perguntaRepository,
+            OpcaoRepository opcaoRepository) {
+
         this.respostaRepository = respostaRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.perguntaRepository = perguntaRepository;
+        this.opcaoRepository = opcaoRepository;
     }
 
-    public List<Resposta> listarTodas() {
-        return respostaRepository.findAll();
+    private RespostaResponseDTO converterParaDTO(Resposta resposta) {
+
+        RespostaResponseDTO dto = new RespostaResponseDTO();
+
+        dto.setId(resposta.getId());
+        dto.setUsuarioId(resposta.getUsuario().getId());
+        dto.setPerguntaId(resposta.getPergunta().getId());
+
+        if (resposta.getOpcao() != null) {
+            dto.setOpcaoId(resposta.getOpcao().getId());
+        }
+
+        dto.setRespostaTexto(resposta.getRespostaTexto());
+        dto.setDataResposta(resposta.getDataResposta());
+
+        return dto;
     }
 
-    public Resposta buscarPorId(Long id) {
-        return respostaRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Resposta não encontrada."));
+    public List<RespostaResponseDTO> listarTodas() {
+
+        return respostaRepository.findAll()
+                .stream()
+                .map(this::converterParaDTO)
+                .toList();
     }
 
-    public Resposta salvar(Resposta resposta) {
+    public RespostaResponseDTO salvar(RespostaRequestDTO dto) {
+
+        Resposta resposta = new Resposta();
+
+        resposta.setUsuario(
+                usuarioRepository.findById(dto.getUsuarioId())
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException("Usuário não encontrado."))
+        );
+
+        resposta.setPergunta(
+                perguntaRepository.findById(dto.getPerguntaId())
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException("Pergunta não encontrada."))
+        );
+
+        if (dto.getOpcaoId() != null) {
+            resposta.setOpcao(
+                    opcaoRepository.findById(dto.getOpcaoId())
+                            .orElseThrow(() ->
+                                    new ResourceNotFoundException("Opção não encontrada."))
+            );
+        }
+
+        resposta.setRespostaTexto(dto.getRespostaTexto());
 
         validarResposta(resposta);
 
-        return respostaRepository.save(resposta);
+        return converterParaDTO(respostaRepository.save(resposta));
     }
 
     private void validarResposta(Resposta resposta) {
@@ -101,25 +161,46 @@ public class RespostaService {
         }
     }
 
-    public Resposta atualizar(Long id, Resposta respostaAtualizada) {
+    public RespostaResponseDTO atualizar(Long id, RespostaRequestDTO dto) {
 
         Resposta resposta = respostaRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Resposta não encontrada."));
 
-        resposta.setUsuario(respostaAtualizada.getUsuario());
-        resposta.setPergunta(respostaAtualizada.getPergunta());
-        resposta.setOpcao(respostaAtualizada.getOpcao());
-        resposta.setRespostaTexto(respostaAtualizada.getRespostaTexto());
+        resposta.setUsuario(
+                usuarioRepository.findById(dto.getUsuarioId())
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException("Usuário não encontrado."))
+        );
+
+        resposta.setPergunta(
+                perguntaRepository.findById(dto.getPerguntaId())
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException("Pergunta não encontrada."))
+        );
+
+        if (dto.getOpcaoId() != null) {
+            resposta.setOpcao(
+                    opcaoRepository.findById(dto.getOpcaoId())
+                            .orElseThrow(() ->
+                                    new ResourceNotFoundException("Opção não encontrada."))
+            );
+        } else {
+            resposta.setOpcao(null);
+        }
+
+        resposta.setRespostaTexto(dto.getRespostaTexto());
 
         validarResposta(resposta);
 
-        return respostaRepository.save(resposta);
+        return converterParaDTO(respostaRepository.save(resposta));
     }
 
     public void excluir(Long id) {
 
-        Resposta resposta = buscarPorId(id);
+        Resposta resposta = respostaRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Resposta não encontrada."));
 
         respostaRepository.delete(resposta);
     }
