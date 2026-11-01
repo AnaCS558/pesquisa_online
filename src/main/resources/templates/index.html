@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pesquisa Online</title>
+</head>
+<body>
+
+<script th:src="@{/js/auth.js}"></script>
+
+<script>
+    window.location.replace(
+        Auth.estaLogado() ? "pesquisas.html" : "login.html"
+    );
+</script>
+
+<noscript>
+    <p>
+        Este aplicativo precisa de JavaScript habilitado.
+        <a th:href="@{/login.html}">Entrar</a>
+    </p>
+</noscript>
+
+</body>
+</html>

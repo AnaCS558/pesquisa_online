@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Responder pesquisa | Pesquisa Online</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap">
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div id="navbar-slot"></div>
+
+    <main class="page page--narrow">
+        <div class="page-head">
+            <span class="page-head__eyebrow">
+                <a th:href="@{/pesquisas.html}">← Voltar para pesquisas</a>
+            </span>
+        </div>
+
+        <div id="content-area">
+            <div class="loading-state">
+                <div class="spinner" aria-hidden="true"></div>
+                <p>Carregando pesquisa...</p>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script th:src="@{/js/api.js}"></script>
+<script th:src="@{/js/auth.js}"></script>
+<script th:src="@{/js/ui.js}"></script>
+<script th:src="@{/js/responder.js}"></script>
+</body>
+</html>

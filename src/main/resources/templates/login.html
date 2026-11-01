@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Entrar | Pesquisa Online</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap"
+    >
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<div class="auth-shell">
+
+    <section class="auth-shell__visual">
+
+        <h2>
+            Crie pesquisas, colete respostas e veja os resultados em um só lugar.
+        </h2>
+
+        <p>
+            Monte formulários com perguntas abertas ou de múltipla escolha
+            e acompanhe os resultados em tempo real.
+        </p>
+
+        <div class="auth-shell__badges">
+
+            <div class="auth-shell__badge">
+                <span>Perguntas abertas e de múltipla escolha</span>
+            </div>
+
+            <div class="auth-shell__badge">
+                <span>Resultados com gráficos por pergunta</span>
+            </div>
+
+            <div class="auth-shell__badge">
+                <span>Pesquisas podem ser encerradas a qualquer momento</span>
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="auth-shell__form">
+
+        <div class="auth-card">
+
+            <div class="auth-card__brand">
+                <span class="navbar__mark">P</span>
+                <span>Pesquisa Online</span>
+            </div>
+
+            <h1>Entrar</h1>
+
+            <p class="auth-card__sub">
+                Acesse para criar ou responder pesquisas.
+            </p>
+
+            <div class="auth-card__alert" id="login-alert"></div>
+
+            <form id="login-form" novalidate>
+
+                <div class="field">
+                    <label for="email">E-mail</label>
+
+                    <input
+                            class="input"
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="voce@exemplo.com"
+                            required
+                            autocomplete="email"
+                    >
+
+                    <div class="field__error" id="email-error"></div>
+                </div>
+
+                <div class="field">
+                    <label for="senha">Senha</label>
+
+                    <input
+                            class="input"
+                            type="password"
+                            id="senha"
+                            name="senha"
+                            placeholder="Sua senha"
+                            required
+                            autocomplete="current-password"
+                    >
+
+                    <div class="field__error" id="senha-error"></div>
+                </div>
+
+                <button
+                        class="btn btn--primary btn--block btn--lg"
+                        type="submit"
+                        id="login-submit"
+                >
+                    Entrar
+                </button>
+
+            </form>
+
+            <p class="auth-card__foot">
+                Ainda não tem conta?
+                <a th:href="@{/cadastro.html}">Criar conta</a>
+            </p>
+
+        </div>
+
+    </section>
+
+</div>
+
+<script th:src="@{/js/api.js}"></script>
+<script th:src="@{/js/auth.js}"></script>
+<script th:src="@{/js/login.js}"></script>
+
+</body>
+</html>

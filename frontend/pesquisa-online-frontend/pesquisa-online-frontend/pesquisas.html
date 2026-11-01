@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Minhas pesquisas | Pesquisa Online</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <div id="navbar-slot"></div>
+
+    <main class="page">
+      <div class="toolbar">
+        <div class="page-head" style="margin-bottom:0;">
+          <h1 id="page-title">Pesquisas</h1>
+        </div>
+        <div class="tabs" id="filter-tabs">
+          <button type="button" data-filter="todas" class="is-active">Todas</button>
+          <button type="button" data-filter="ativas">Ativas</button>
+          <button type="button" data-filter="encerradas">Encerradas</button>
+        </div>
+      </div>
+
+      <div id="content-area">
+        <div class="loading-state">
+          <div class="spinner" aria-hidden="true"></div>
+          <p>Carregando pesquisas...</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/pages/pesquisas.js"></script>
+</body>
+</html>
