@@ -1,10 +1,10 @@
 # Pesquisa Online
 
-> API REST para criação, gerenciamento e preenchimento de pesquisas online, desenvolvida com Java e Spring Boot.
+> Sistema web para criação, gerenciamento e preenchimento de pesquisas online, com API REST em Java/Spring Boot e interface em Thymeleaf, HTML, CSS e JavaScript.
 
-O **Pesquisa Online** é um sistema desenvolvido para permitir a criação e o gerenciamento de pesquisas, possibilitando o cadastro de perguntas, opções de resposta e o registro das respostas dos usuários.
+O **Pesquisa Online** permite criar e gerenciar pesquisas, cadastrar perguntas e opções de resposta e registrar as respostas dos participantes. Administradores montam as pesquisas e acompanham os resultados; participantes respondem às pesquisas disponíveis.
 
-O projeto foi desenvolvido com foco na aplicação prática de conceitos de **Programação Orientada a Objetos, APIs REST, arquitetura em camadas, persistência de dados, validação e regras de negócio**.
+O projeto foi desenvolvido com foco na aplicação prática de conceitos de **Programação Orientada a Objetos, APIs REST, arquitetura em camadas, persistência de dados, validação, regras de negócio e integração entre backend e frontend**.
 
 ---
 
@@ -12,16 +12,17 @@ O projeto foi desenvolvido com foco na aplicação prática de conceitos de **Pr
 
 O sistema permite que pesquisas sejam criadas e disponibilizadas para os usuários responderem.
 
-Cada pesquisa pode possuir diversas perguntas, que podem ter diferentes tipos de resposta. Para perguntas de múltipla escolha, também é possível cadastrar diferentes opções.
+Cada pesquisa pode possuir diversas perguntas, que podem ter diferentes tipos de resposta (aberta, única escolha ou múltipla escolha). Para perguntas de escolha, também é possível cadastrar as opções.
 
 O sistema possui regras de negócio para controlar o recebimento das respostas, como verificar se uma pesquisa está ativa ou se já foi encerrada.
 
 ### Principais recursos
 
-* Gerenciamento de usuários
+* Cadastro e identificação de usuários, com perfis **Admin** e **Participante**
 * Criação e gerenciamento de pesquisas
-* Cadastro e gerenciamento de perguntas
-* Cadastro de opções de resposta
+* Cadastro e gerenciamento de perguntas e opções de resposta
+* Tela para o participante responder às pesquisas
+* Tela de resultados para o administrador
 * Registro de respostas
 * Controle de pesquisas ativas e encerradas
 * Validação dos dados recebidos
@@ -33,62 +34,66 @@ O sistema possui regras de negócio para controlar o recebimento das respostas, 
 
 ## Tecnologias
 
-| Tecnologia      | Utilização                    |
-| --------------- | ----------------------------- |
-| Java            | Linguagem principal           |
-| Spring Boot     | Desenvolvimento da aplicação  |
-| Spring Web      | Construção da API REST        |
-| Spring Data JPA | Persistência de dados         |
-| Hibernate       | ORM                           |
-| Bean Validation | Validação dos dados           |
-| MySQL           | Banco de dados                |
-| Maven           | Gerenciamento de dependências |
-| Postman         | Testes da API                 |
-| Git             | Controle de versão            |
-| GitHub          | Hospedagem do código          |
+| Tecnologia              | Utilização                           |
+| ----------------------- | ------------------------------------ |
+| Java                    | Linguagem principal                  |
+| Spring Boot             | Desenvolvimento da aplicação         |
+| Spring Web              | Construção da API REST               |
+| Spring Data JPA         | Persistência de dados                |
+| Hibernate               | ORM                                  |
+| Bean Validation         | Validação dos dados                  |
+| Thymeleaf               | Templates das páginas HTML           |
+| HTML, CSS e JavaScript  | Interface e consumo da API (`fetch`) |
+| MySQL                   | Banco de dados                       |
+| Maven                   | Gerenciamento de dependências        |
+| Postman                 | Testes da API                        |
+| Git e GitHub            | Controle de versão e hospedagem      |
 
 ---
 
 ## Arquitetura
 
-O projeto utiliza uma **arquitetura em camadas**, separando as responsabilidades da aplicação.
+O projeto utiliza uma **arquitetura em camadas** no backend, e o frontend é servido pela própria aplicação Spring Boot.
 
 ```text
-┌─────────────────────────────┐
-│          Client             │
-│       Postman / Frontend    │
-└──────────────┬──────────────┘
-               │
-               ▼
-┌─────────────────────────────┐
-│         Controller          │
-│       API / Endpoints       │
-└──────────────┬──────────────┘
-               │
-               ▼
-┌─────────────────────────────┐
-│           Service           │
-│        Regras de negócio    │
-└──────────────┬──────────────┘
-               │
-               ▼
-┌─────────────────────────────┐
-│         Repository          │
-│      Acesso aos dados       │
-└──────────────┬──────────────┘
-               │
-               ▼
-┌─────────────────────────────┐
-│          MySQL              │
-│          Database           │
-└─────────────────────────────┘
+┌─────────────────────────────────────────┐
+│  Navegador (páginas Thymeleaf + JS)     │
+│  ou Postman                             │
+└───────────────────┬─────────────────────┘
+                    │ HTTP
+                    ▼
+┌─────────────────────────────────────────┐
+│  PaginaController      Controllers REST │
+│  (entrega as páginas)  (JSON / API)     │
+└───────────────────┬─────────────────────┘
+                    │
+                    ▼
+┌─────────────────────────────────────────┐
+│               Service                   │
+│          Regras de negócio              │
+└───────────────────┬─────────────────────┘
+                    │
+                    ▼
+┌─────────────────────────────────────────┐
+│             Repository                  │
+│          Acesso aos dados               │
+└───────────────────┬─────────────────────┘
+                    │
+                    ▼
+┌─────────────────────────────────────────┐
+│                MySQL                    │
+└─────────────────────────────────────────┘
 ```
 
 ### Camadas
 
+**PaginaController**
+
+Entrega as páginas HTML (templates Thymeleaf). As rotas terminam em `.html` (por exemplo `/login.html`) para não colidirem com a API REST, que usa rotas como `/pesquisas`.
+
 **Controller**
 
-Responsável por receber as requisições HTTP e disponibilizar os endpoints da API.
+Recebe as requisições HTTP e disponibiliza os endpoints da API, retornando JSON.
 
 **Service**
 
@@ -104,11 +109,45 @@ Representa as entidades utilizadas pelo sistema e seus relacionamentos com o ban
 
 **DTO**
 
-Responsável pelo transporte de dados entre as diferentes partes da aplicação, evitando a necessidade de expor diretamente as entidades em determinadas operações.
+Responsável pelo transporte de dados entre as diferentes partes da aplicação, evitando expor diretamente as entidades em determinadas operações.
 
 **Exception**
 
 Contém as exceções personalizadas e o tratamento global dos erros da aplicação.
+
+---
+
+## Frontend
+
+O frontend fica dentro do próprio projeto Spring Boot:
+
+* `src/main/resources/templates/`: páginas HTML (Thymeleaf)
+* `src/main/resources/static/css/`: estilos
+* `src/main/resources/static/js/`: scripts que consomem a API REST
+
+### Páginas
+
+| Página            | Quem acessa      | Função                                          |
+| ----------------- | ---------------- | ----------------------------------------------- |
+| `/`               | Todos            | Redireciona para o login ou para as pesquisas   |
+| `/login.html`     | Todos            | Entrar com o e-mail cadastrado                  |
+| `/cadastro.html`  | Todos            | Criar conta (perfil Participante ou Admin)      |
+| `/pesquisas.html` | Usuário logado   | Lista as pesquisas; o Admin também gerencia     |
+| `/editor.html`    | Admin            | Cria e edita pesquisas, perguntas e opções      |
+| `/responder.html` | Usuário logado   | Responde a uma pesquisa                         |
+| `/resultados.html`| Admin            | Visualiza as respostas de uma pesquisa          |
+
+### Como o frontend se comunica com a API
+
+Os scripts em `static/js/` usam `fetch` para chamar os endpoints REST da própria aplicação. A camada de acesso à API está em `static/js/api.js`, e a sessão do usuário é guardada no navegador em `static/js/auth.js`.
+
+### Limitações atuais da autenticação
+
+* Ainda **não existe endpoint de login com validação de senha**. O login busca o usuário pelo e-mail (`GET /usuarios/email/{email}`) e, se ele existir, inicia a sessão sem conferir a senha.
+* A senha é armazenada **sem criptografia** no banco.
+* A sessão fica apenas no `localStorage` do navegador, e a API não bloqueia chamadas por perfil.
+
+Esses pontos estão listados em [Próximos passos](#próximos-passos) e não devem ser usados em produção.
 
 ---
 
@@ -120,29 +159,17 @@ O sistema possui as seguintes entidades principais:
 ┌──────────────┐
 │   Usuario    │
 └──────┬───────┘
-       │
        │ 1:N
        ▼
 ┌──────────────┐
 │   Resposta   │
 └──────┬───────┘
-       │
        │ N:1
        ▼
-┌──────────────┐
-│   Pergunta   │
-└──────┬───────┘
-       │
-       │ N:1
-       ▼
-┌──────────────┐
-│   Pesquisa   │
-└──────────────┘
-
-┌──────────────┐
-│   Pergunta   │
-└──────┬───────┘
-       │
+┌──────────────┐        ┌──────────────┐
+│   Pergunta   │ N:1    │   Pesquisa   │
+│              ├───────▶│              │
+└──────┬───────┘        └──────────────┘
        │ 1:N
        ▼
 ┌──────────────┐
@@ -156,21 +183,17 @@ O sistema possui as seguintes entidades principais:
 
 Representa os usuários cadastrados no sistema.
 
-Principais atributos:
-
 ```text
 id
 nome
-email
+email (único)
 senha
-perfil
+perfil  → Admin | Participante
 ```
 
 #### Pesquisa
 
 Representa uma pesquisa criada no sistema.
-
-Principais atributos:
 
 ```text
 id
@@ -187,27 +210,30 @@ Uma pesquisa pode possuir várias perguntas.
 
 Representa uma pergunta pertencente a uma pesquisa.
 
-Principais atributos:
-
 ```text
 id
 enunciado
-tipoPergunta
+tipoPergunta  → Aberta | Unica_Escolha | Multipla_Escolha
 obrigatoria
 ordem
+pesquisa
 ```
 
 Uma pergunta pertence a uma pesquisa e pode possuir opções e respostas.
 
 #### Opcao
 
-Representa uma alternativa disponível para perguntas que possuem opções de resposta.
+Representa uma alternativa disponível para perguntas de escolha.
+
+```text
+id
+descricao
+pergunta
+```
 
 #### Resposta
 
 Representa uma resposta enviada por um usuário.
-
-Principais atributos:
 
 ```text
 id
@@ -224,66 +250,63 @@ dataResposta
 
 O sistema possui regras para garantir a consistência das operações.
 
-Entre elas:
-
 * Uma pesquisa precisa estar ativa para receber respostas.
-* Pesquisas encerradas não podem receber novas respostas.
+* Pesquisas com data de encerramento já vencida não recebem novas respostas.
+* A opção escolhida deve pertencer à pergunta respondida.
+* Perguntas **abertas** exigem `respostaTexto` e não aceitam opção.
+* Perguntas de **escolha** exigem uma opção e não aceitam `respostaTexto`.
+* O e-mail do usuário é único (restrição no banco de dados).
 * Dados obrigatórios são validados antes de serem persistidos.
-* O e-mail do usuário deve ser único.
-* Recursos inexistentes geram uma exceção específica.
-* Regras inválidas de negócio geram `BusinessRuleException`.
-* Erros de validação são tratados de forma global.
+* Recursos inexistentes geram `ResourceNotFoundException`.
+* Regras de negócio violadas geram `BusinessRuleException`.
 * A data da resposta é registrada automaticamente no momento da persistência.
 
 ---
 
 ## Validação e tratamento de erros
 
-A aplicação possui um `GlobalExceptionHandler` responsável por centralizar o tratamento das principais exceções.
+A aplicação possui um `GlobalExceptionHandler` que centraliza o tratamento das exceções e devolve sempre o mesmo formato de resposta.
 
-São utilizadas exceções personalizadas como:
-
-```text
-ResourceNotFoundException
-BusinessRuleException
-```
-
-Também são tratados erros de validação através do:
-
-```text
-MethodArgumentNotValidException
-```
+| Exceção                            | Status | Quando ocorre                                     |
+| ---------------------------------- | ------ | ------------------------------------------------- |
+| `ResourceNotFoundException`        | 404    | Registro não encontrado                           |
+| `NoResourceFoundException`         | 404    | Rota ou arquivo inexistente                       |
+| `MethodArgumentNotValidException`  | 400    | Falha na validação dos campos                     |
+| `BusinessRuleException`            | 400    | Regra de negócio violada                          |
+| `HttpMessageNotReadableException`  | 400    | JSON inválido ou valor de enum desconhecido       |
+| `Exception` (genérica)             | 500    | Erro inesperado (o detalhe é registrado no log)   |
 
 ### Exemplo de resposta de erro
 
 ```json
 {
   "status": 400,
-  "mensagem": "Erro de validação",
+  "mensagem": "Erro de validação.",
   "erros": {
-    "nome": "O nome é obrigatório",
-    "email": "O email deve ser válido"
+    "nome": "O nome é obrigatório.",
+    "email": "Informe um email válido."
   }
 }
 ```
 
-Essa abordagem permite que a API mantenha um padrão consistente nas respostas de erro.
+> Em caso de erro 500, o motivo real aparece no console da aplicação (linha `ERROR`, seguida de `Caused by:`), pois a resposta HTTP traz apenas uma mensagem genérica.
 
 ---
 
 ## API
 
-A API disponibiliza endpoints para os principais recursos do sistema.
+A API não usa prefixo; cada recurso fica na raiz.
 
 ### Usuários
 
-| Método   | Endpoint         | Descrição         |
-| -------- | ---------------- | ----------------- |
-| `POST`   | `/usuarios`      | Cadastrar usuário |
-| `GET`    | `/usuarios`      | Listar usuários   |
-| `GET`    | `/usuarios/{id}` | Buscar usuário    |
-| `PUT`    | `/usuarios/{id}` | Atualizar usuário |
-| `DELETE` | `/usuarios/{id}` | Excluir usuário   |
+| Método   | Endpoint                 | Descrição                |
+| -------- | ------------------------ | ------------------------ |
+| `POST`   | `/usuarios`              | Cadastrar usuário        |
+| `GET`    | `/usuarios`              | Listar usuários          |
+| `GET`    | `/usuarios/{id}`         | Buscar usuário por id    |
+| `GET`    | `/usuarios/email/{email}`| Buscar usuário por e-mail|
+| `PUT`    | `/usuarios/{id}`         | Atualizar usuário        |
+| `DELETE` | `/usuarios/{id}`         | Excluir usuário          |
 
 ### Pesquisas
 
@@ -301,23 +324,33 @@ A API disponibiliza endpoints para os principais recursos do sistema.
 | -------- | ----------------- | ------------------ |
 | `POST`   | `/perguntas`      | Criar pergunta     |
 | `GET`    | `/perguntas`      | Listar perguntas   |
-| `GET`    | `/perguntas/{id}` | Buscar pergunta    |
 | `PUT`    | `/perguntas/{id}` | Atualizar pergunta |
 | `DELETE` | `/perguntas/{id}` | Excluir pergunta   |
 
+### Opções
+
+| Método   | Endpoint        | Descrição        |
+| -------- | --------------- | ---------------- |
+| `POST`   | `/opcoes`       | Criar opção      |
+| `GET`    | `/opcoes`       | Listar opções    |
+| `GET`    | `/opcoes/{id}`  | Buscar opção     |
+| `PUT`    | `/opcoes/{id}`  | Atualizar opção  |
+| `DELETE` | `/opcoes/{id}`  | Excluir opção    |
+
 ### Respostas
 
-| Método | Endpoint          | Descrição          |
-| ------ | ----------------- | ------------------ |
-| `POST` | `/respostas`      | Registrar resposta |
-| `GET`  | `/respostas`      | Listar respostas   |
-| `GET`  | `/respostas/{id}` | Buscar resposta    |
+| Método   | Endpoint          | Descrição            |
+| -------- | ----------------- | -------------------- |
+| `POST`   | `/respostas`      | Registrar resposta   |
+| `GET`    | `/respostas`      | Listar respostas     |
+| `PUT`    | `/respostas/{id}` | Atualizar resposta   |
+| `DELETE` | `/respostas/{id}` | Excluir resposta     |
 
 > Os endpoints podem ser modificados conforme a evolução do projeto.
 
 ---
 
-## Exemplo de requisição
+## Exemplos de requisição
 
 ### Cadastro de usuário
 
@@ -328,9 +361,11 @@ A API disponibiliza endpoints para os principais recursos do sistema.
   "nome": "Ana Carolina",
   "email": "ana@email.com",
   "senha": "123456",
-  "perfil": "USUARIO"
+  "perfil": "Admin"
 }
 ```
+
+O campo `perfil` aceita `Admin` ou `Participante` (com essa grafia).
 
 ### Criação de pesquisa
 
@@ -352,10 +387,47 @@ A API disponibiliza endpoints para os principais recursos do sistema.
 ```json
 {
   "enunciado": "Como você avalia nosso atendimento?",
-  "tipoPergunta": "MULTIPLA_ESCOLHA",
+  "tipoPergunta": "Unica_Escolha",
   "obrigatoria": true,
   "ordem": 1,
   "pesquisaId": 1
+}
+```
+
+O campo `tipoPergunta` aceita `Aberta`, `Unica_Escolha` ou `Multipla_Escolha`.
+
+### Cadastro de opção
+
+`POST /opcoes`
+
+```json
+{
+  "descricao": "Excelente",
+  "perguntaId": 1
+}
+```
+
+### Registro de resposta
+
+`POST /respostas`
+
+Pergunta de escolha:
+
+```json
+{
+  "usuarioId": 1,
+  "perguntaId": 1,
+  "opcaoId": 1
+}
+```
+
+Pergunta aberta:
+
+```json
+{
+  "usuarioId": 1,
+  "perguntaId": 2,
+  "respostaTexto": "O atendimento foi rápido."
 }
 ```
 
@@ -377,11 +449,17 @@ Pergunta 1 ──────── N Opcao
 Pergunta 1 ──────── N Resposta
 ```
 
-O Hibernate pode ser utilizado para atualizar a estrutura das tabelas durante o desenvolvimento através da configuração:
+O Hibernate cria e atualiza as tabelas durante o desenvolvimento através da configuração:
 
 ```properties
 spring.jpa.hibernate.ddl-auto=update
 ```
+
+> Atenção: o `update` **não altera colunas que já existem**. Se você renomear um valor de enum (por exemplo `Administrador` para `Admin`), a coluna `perfil` do MySQL pode continuar com os valores antigos. Nesse caso, ajuste a coluna manualmente:
+>
+> ```sql
+> ALTER TABLE usuario MODIFY perfil VARCHAR(20) NOT NULL;
+> ```
 
 ---
 
@@ -393,20 +471,21 @@ pesquisa_online/
 ├── src/
 │   └── main/
 │       ├── java/
-│       │   └── com/
-│       │       └── ana/
-│       │           └── pesquisa_online/
-│       │               │
-│       │               ├── controller/
-│       │               ├── dto/
-│       │               ├── entity/
-│       │               ├── enums/
-│       │               ├── exception/
-│       │               ├── repository/
-│       │               └── service/
+│       │   └── com/ana/pesquisa_online/
+│       │       ├── controller/      API REST e PaginaController
+│       │       ├── dto/
+│       │       ├── entity/
+│       │       │   └── enums/       PerfilUsuario, TipoPergunta
+│       │       ├── exception/
+│       │       ├── repository/
+│       │       └── service/
 │       │
 │       └── resources/
-│           └── application.properties
+│           ├── application.properties
+│           ├── templates/           Páginas Thymeleaf (.html)
+│           └── static/
+│               ├── css/style.css
+│               └── js/              api.js, auth.js, ui.js e scripts das páginas
 │
 ├── pom.xml
 └── README.md
@@ -418,10 +497,8 @@ pesquisa_online/
 
 ### Pré-requisitos
 
-Certifique-se de possuir instalado:
-
-* Java
-* Maven
+* Java (compatível com o `pom.xml`)
+* Maven (ou o `mvnw` incluído no projeto)
 * MySQL
 * Git
 * IntelliJ IDEA ou outra IDE compatível
@@ -475,13 +552,21 @@ Pelo Maven:
 mvn spring-boot:run
 ```
 
-Ou execute a classe principal do Spring Boot diretamente pela IDE.
+Ou execute a classe `PesquisaOnlineApplication` diretamente pela IDE.
 
 A aplicação será iniciada, por padrão, em:
 
 ```text
 http://localhost:8080
 ```
+
+### 6. Acesse o sistema
+
+1. Abra `http://localhost:8080` no navegador. Você será levado à tela de login.
+2. Clique em **Criar conta** e cadastre um usuário com perfil **Admin**.
+3. Como Admin, crie uma pesquisa, adicione perguntas e opções.
+4. Cadastre outro usuário com perfil **Participante** (em outra aba anônima ou depois de sair) para responder à pesquisa.
+5. Volte ao Admin e abra a tela de resultados.
 
 ---
 
@@ -508,15 +593,25 @@ E envie:
   "nome": "Ana Carolina",
   "email": "ana@email.com",
   "senha": "123456",
-  "perfil": "USUARIO"
+  "perfil": "Participante"
 }
 ```
 
 ---
 
-## Conceitos aplicados
+## Problemas comuns
 
-Durante o desenvolvimento foram aplicados conceitos importantes de desenvolvimento de software:
+| Sintoma                                                     | Causa provável                                                                 |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `{"status":500,"mensagem":"Ocorreu um erro interno..."}`    | Veja o console da aplicação: a linha `ERROR` e o `Caused by:` mostram a causa. |
+| Erro ao criar usuário com `perfil` inválido                 | O valor deve ser exatamente `Admin` ou `Participante`.                         |
+| Página abre sem estilo ou sem funcionar                     | Cache do navegador: atualize com `Ctrl+F5`.                                    |
+| `404` em `/login` ou `/pesquisas` no navegador              | As páginas usam `.html`: `/login.html`, `/pesquisas.html`.                     |
+| Erro de coluna ao salvar usuário depois de mudar um enum    | Ajuste a coluna no MySQL (veja a seção Banco de dados).                        |
+
+---
+
+## Conceitos aplicados
 
 * Programação Orientada a Objetos
 * Encapsulamento
@@ -526,29 +621,26 @@ Durante o desenvolvimento foram aplicados conceitos importantes de desenvolvimen
 * API REST
 * Arquitetura em camadas
 * DTOs
-* JPA
-* Hibernate
+* JPA e Hibernate
 * Validação de dados
 * Exceções personalizadas
 * Tratamento global de exceções
 * Regras de negócio
 * Persistência em banco de dados
+* Integração entre frontend (Thymeleaf, HTML, CSS e JavaScript) e backend
 * Controle de versão com Git
 
 ---
 
 ## Próximos passos
 
-Algumas funcionalidades que podem ser implementadas futuramente:
-
-* Autenticação e autorização de usuários
-* Spring Security
+* Autenticação real com validação de senha
+* Spring Security e autorização por perfil
 * Criptografia de senhas
-* Interface web para criação e preenchimento das pesquisas
+* Mensagem de erro clara para e-mail já cadastrado
 * Documentação da API com Swagger/OpenAPI
 * Paginação e filtros
-* Relatórios de respostas
-* Dashboard de resultados
+* Gráficos e dashboard de resultados
 * Testes automatizados
 * Deploy da aplicação
 
